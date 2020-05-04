@@ -289,18 +289,11 @@
 
 (for ((n (in-range 5)))
   (displayln p)
-  ;(displayln p-err)
-  #;(displayln
-   (make-plot (day-ill (car data)) 
-              (day-recovered (car data))
-              (day-deceased (car data))
-              p (length data)))
   (define s (build-state0 (day-ill (car data)) 
                         (day-recovered (car data))
                         (day-deceased (car data))
                         p))
   (define d (make-derivatives s p ndays))
-  ;(displayln d)
   (set! sim (simulate s p ndays))
   (define-values (x x-err)
     (let-values (((aty ata) (build-system sim data d)))
@@ -309,11 +302,10 @@
                     '(0 1 2 4)
                     ;'(0 2 4 5)
                     )))
-  ;(displayln x)
-  (set! p (adjust-parameters p (flvector-scale x 1.0)))
+  (set! p (adjust-parameters p x))
   (set! p-err x-err))
 
-(plot-width 1000)
+(plot-width 800)
 (plot-height 600)
 
 (displayln (make-plot-cmp-I sim))
